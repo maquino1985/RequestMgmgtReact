@@ -1,0 +1,27 @@
+import React, {Component} from 'react';
+require('style!css!../css/App.css');
+import RequestForm from './RequestForm'
+import ErrorMessage from '../components/ManualCompleteRequestForm'
+class App extends Component {
+
+    render() {
+        const requestIds = this.props.location.query.requestIds;
+        const message = requestIds ? <div>(<strong>Request for:</strong> <i>{requestIds}</i>)</div> : undefined;
+        return (
+            <div className="App">
+                <div className="App-header">
+                </div>
+                <p className="App-intro">Lab Analytics Requisition Form
+                </p>
+                {message || <ErrorMessage/>}
+                <br/>
+                <RequestForm requestIds={requestIds}/>
+
+                {this.props.children}
+            </div>
+        );
+    }
+
+}
+
+export default App;

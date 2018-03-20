@@ -1,0 +1,107 @@
+/**
+ * Created by Mark Aquino on 1/13/17.
+ */
+import React, {Component} from 'react';
+import '../modules/App.js';
+import CheckList from './CheckList.js';
+require('css!../css/DropDown.css');
+
+class DropDown extends Component {
+    constructor() {
+        super();
+        this.state = {
+            checked: {},
+            attributes: [],
+            counter: 0
+        }
+    }
+
+    handleChange(e) {
+        let selected = e.target.value;
+        let attributes = this.props.assays.filter(i => i.name === selected)[0].attributes;
+
+        this.setState({
+            selected: e.target.value,
+            attributes: attributes,
+            checked: {}
+        });
+    }
+
+    handleClickFactory = (attr) => {
+        return (e) => {
+            this.setState((oldState) => {
+                const isChecked = oldState.checked[attr.name];
+                const newChecked = {...oldState.checked};
+                if (isChecked) {
+                    delete newChecked[attr.name];
+                } else {
+                    newChecked[attr.name] = true;
+                }
+                this.props.clickHandler(this.state.selected, newChecked, this.props.counter);
+                return {...oldState, checked: newChecked};
+            });
+        };
+    };
+
+    toggleSelect() {
+        const newState = {};
+
+        let unchecked = {};
+        let attributes = this.state.attributes;
+        unchecked = attributes.find(a => this.state.checked[a.name] !== true);
+
+        if (unchecked) {
+            attributes.forEach(a => newState[a.name] = true);
+        }
+        else {
+            attributes.forEach(a => delete newState[a.name])
+        }
+
+        this.setState({checked: newState});
+        this.props.clickHandler(this.state.selected, newState, this.props.counter);
+    }
+
+    render() {
+        let assays = this.props.assays;
+        let dropdown = assays.map((item, index) => {
+            return (<option key={index} value={item.name}>{item.name}</option>);
+        });
+        let selected = this.state.selected;
+        let list = [];
+        if (selected) {
+            let filtered = assays.filter((i) => i.name === selected);
+            list = <CheckList attributes={filtered[0].attributes} selected={this.state.checked}
+                              onClick={this.handleClickFactory}
+                              toggleSelect={this.toggleSelect.bind(this)}/>;
+        }
+
+        return (
+            <div className="container">
+                <div className="row">
+                    <div className="col"/>
+                    <div className="col">
+                        <select required className="form-control" onChange={(e) => this.handleChange(e)}>
+                            <option selected disabled>Select Analytic</option>
+                            {dropdown}
+                        </select>
+                    </div>
+                    <div className="col"/>
+                </div>
+                <div className="row">
+                    <div className="col">
+                        Check requested measurement attributes for <strong>{this.state.selected}</strong>
+                        &nbsp;Request.<br/><br/>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col">
+                        {list}
+                        <br/>
+                    </div>
+                </div>
+            </div>)
+    }
+}
+
+
+export default DropDown;

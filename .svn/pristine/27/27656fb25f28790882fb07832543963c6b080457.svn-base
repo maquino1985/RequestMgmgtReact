@@ -1,0 +1,10 @@
+/**
+ * Created by Mark Aquino on 3/9/17.
+ */
+import React from 'react';
+
+export default React.createClass({
+    render() {
+        return <div>{this.props.text}</div>
+    }
+})

@@ -1,0 +1,224 @@
+/**
+ * Created by Mark Aquino on 3/16/17.
+ */
+import React, {Component} from 'react';
+import DropDown from '../components/DropDown.js';
+import {Map as iMap} from "immutable";
+import SubmitForm from '../components/RequestButton.js';
+import {Link} from 'react-router';
+import Messages from './Messages'
+
+class RequestForm extends Component {
+
+    constructor() {
+        super();
+        this.state = {
+            counter: 1,
+            assays: [{
+                name: "Endotoxin Measurement",
+                description: "Endotoxin Assay",
+                attributes: [
+                    {
+                        name: "Endotoxin Level",
+                        description: "Endotoxin Level"
+                    },
+                    {
+                        name: "Endotoxin Level Value",
+                        description: "Endotoxin Level Value"
+                    },
+                    {
+                        name: "Result",
+                        description: "Result"
+                    }
+                ]
+            },
+                {
+                    name: "MS Analytics",
+                    description: "Mass Spectroscopy Analytics",
+                    attributes: [
+                        {name: "Identity Confirmed", escription: "Identity confirmed"},
+                        {name: "PMF Coverage", description: ""},
+                        {name: "PTM Glycolylation", description: ""},
+                        {name: "PTM Phosphorylation", desciptions: ""},
+                        {name: "Oxidation", description: ""},
+                        {name: "Deamidation"},
+                        {name: "Isomerization"},
+                        {name: "Total Mass"},
+                        {name: "Method"}
+
+
+
+                        // {
+                        //     name: "Result",
+                        //     description: "Result"
+                        // },
+                        // {
+                        //     name: "MW determination",
+                        //     description: "mol wt determination"
+                        // },
+                        // {
+                        //     name: "MW determination (reduced molecule)",
+                        //     description: "MW Determination (reduced molecule)"
+                        // },
+                        // {
+                        //     name: "MW determination (deglycosylated molecule)",
+                        //     description: null
+                        // },
+                        // {
+                        //     name: "MW determination (deglycosylated and reduced molecule)",
+                        //     description: null
+                        // },
+                        // {
+                        //     name: "Sequence coverage",
+                        //     description: null
+                        // },
+                        // {
+                        //     name: "Sequence coverage - applied enzymes",
+                        //     description: null
+                        // },
+                        // {
+                        //     name: "Confirmed termini",
+                        //     description: null
+                        // },
+                        // {
+                        //     name: "Aglycosylated (HC) (<3% acceptable)",
+                        //     description: null
+                        // },
+                        // {
+                        //     name: "Man3 (est.)",
+                        //     description: null
+                        // },
+                        // {
+                        //     name: "Man5 (est)",
+                        //     description: null
+                        // },
+                        // {
+                        //     name: "G0 (est.)",
+                        //     description: null
+                        // },
+                        // {
+                        //     name: "G0F (est.)",
+                        //     description: null
+                        // },
+                        // {
+                        //     name: "G1F (est.)",
+                        //     description: null
+                        // },
+                        // {
+                        //     name: "G2F (est.)",
+                        //     description: null
+                        // }
+                    ],
+                },
+                {
+                    name: "SDS-PAGE",
+                    description: "SDS-PAGE",
+                    attributes: [
+                        {
+                            name: "Purity",
+                            description: null
+                        },
+                        {
+                            name: "Purity Value",
+                            description: null
+                        },
+                        {
+                            name: "Homogeneous",
+                            description: null
+                        },
+                        {
+                            name: "Mass",
+                            description: null
+                        }
+                    ]
+                }
+            ],
+            dropDownMenuMap: iMap(),
+        }
+    }
+
+    addDropDown() {
+        let count = this.state.counter;
+        this.setState({counter: ++count});
+    }
+
+    removeDropDown() {
+        let count = this.state.counter;
+        if (count === 1) {
+            return;
+        }
+
+        const map = this.state.dropDownMenuMap;
+        count = --count;
+        const newmap = map.delete(count);
+        //print the measurement type and the checked attributes
+        newmap.keySeq().forEach(k => {
+            const value = newmap.get(k);
+            const measurementType = value.measurement;
+            const attributes = Object.keys(value.attributes);
+            console.log(measurementType + ":" + attributes);
+        });
+        this.setState({
+            counter: count,
+            dropDownMenuMap: newmap
+        });
+    }
+
+    //requires some attributes to be clicked.  OK...or need to predefine in initial state?
+    handleClick(selected, checked, key) {
+        let dropDownMenuMap = this.state.dropDownMenuMap;
+        const len = Object.keys(checked).length;
+        dropDownMenuMap = dropDownMenuMap.set(key, {measurement: selected, attributes: checked});
+        this.setState({
+            dropDownMenuMap: dropDownMenuMap
+        });
+    }
+
+    messageHandler = (msg) => {
+        this.setState({
+            statusMessage: msg
+        });
+    }
+
+    render() {
+        let assays = this.state.assays;
+        let dropDowns = [];
+        for (let i = 0; i < this.state.counter; i++) {
+            dropDowns.push(<DropDown key={i} clickHandler={this.handleClick.bind(this)} assays={assays} counter={i}
+                                     measurements={this.state.measurements}/>);
+        }
+        if (this.props.requestIds === undefined) {
+            return null;
+        }
+
+        return (
+            <div className="container ">
+                {dropDowns}
+                <div className="row-sm-12">
+                    <div className="col">
+                        <div className="btn-toolbar">
+                            <div className="btn-group">
+                                <button className="btn btn-outline-primary " type="button"
+                                        onClick={() => this.addDropDown()}><b>+</b></button>
+                                <button className="btn btn-outline-primary " type="button"
+                                        onClick={() => this.removeDropDown()}><b>-</b></button>
+                            </div>
+                            <div className="btn-group">
+                                <RequestButton requestedEntityIds={this.props.requestIds}
+                                               formData={this.state.dropDownMenuMap}
+                                               messageHandler={this.messageHandler}/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col">
+                        <i>{this.state.statusMessage ? <Messages text={this.state.statusMessage}/> : null}</i>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+}
+
+export default RequestForm;

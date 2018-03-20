@@ -1,0 +1,47 @@
+/**
+ * Created by Mark Aquino on 1/17/17.
+ */
+import React, {Component} from 'react';
+import '../modules/App.js';
+require('style!css!../css/CheckList.css');
+
+class CheckList extends Component {
+
+    render() {
+        let attributes = this.props.attributes;
+        let items = attributes.map((item, i) => {
+            let selected = this.props.selected[item.name] ? true : false;
+            return (<Item key={i} message={item.name} onClick={this.props.onClick(item)} checked={selected}/>);
+        });
+        return (
+            <div>
+                <div className="row-sm-12" marginHeight="10px">
+                    {items}
+                </div>
+                <br/>
+                <div className="row-sm-12">
+                    <div className="col-sm-12">
+                        <button type="button" className="btn btn-primary"
+                                onClick={() => this.props.toggleSelect()}>
+                            Select All
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+}
+
+const Item = ({checked, onClick, message}) => {
+    return (
+        <div className="col-sm-4">
+            <div>
+                <label className="checkbox">
+                    <input className="" type="checkbox" checked={checked} onChange={onClick}/> {message}
+                </label>
+            </div>
+        </div>);
+}
+
+
+export default CheckList;

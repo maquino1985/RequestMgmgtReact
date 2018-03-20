@@ -1,0 +1,60 @@
+{
+  "assays":
+  [{
+    "name": "Biacore",
+    "description" : "Biacore Assay",
+    "attributes" : [
+      {
+        "name" : "Kd",
+        "description" : "Dissociation Constant"
+      },
+      {
+        "name" : "Kon",
+        "description" : "association rate"
+      },
+      {
+        "name" : "Koff",
+        "description" : "dissociation rate"
+      }
+    ]
+  },
+    {
+      "name": "MS Analytics",
+      "description": "Mass Spectroscopy Analytics",
+      "attributes": [
+        {"name": "Identity Confirmed", "description": "Identity confirmed"},
+        {"name": "PMF Coverage", "description": ""},
+        {"name": "PTM Glycolylation", "description": ""},
+        {"name": "PTM Phosphorylation", "desciption": ""},
+        {"name": "Oxidation", "description": ""},
+        {"name": "Deamidation"},
+        {"name": "Isomerization"},
+        {"name": "Total Mass"},
+        {"name": "Method"}
+
+      ]
+    },
+    {
+      "name": "SDS-PAGE",
+      "description": "SDS-PAGE",
+      "attributes": [
+        {
+          "name": "Purity",
+          "description": null
+        },
+        {
+          "name": "Purity Value",
+          "description": null
+        },
+        {
+          "name": "Homogeneous",
+          "description": null
+        },
+        {
+          "name": "Mass",
+          "description": null
+        }
+      ]
+    }
+  ]
+}

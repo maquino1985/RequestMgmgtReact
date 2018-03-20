@@ -1,0 +1,40 @@
+{
+  "assays": [
+    {
+      "name": "Biacore",
+      "description": "Biacore Assay",
+      "attributes": [
+        {
+          "name": "Kd",
+          "description": "Dissociation Constant"
+        },
+        {
+          "name": "Kon",
+          "description": "association rate"
+        },
+        {
+          "name": "Koff",
+          "description": "dissociation rate"
+        }
+      ]
+    },
+    {
+      "name": "MS Analytics",
+      "description": "Mass Spectroscopy Analytics",
+      "attributes": [
+        {
+          "name": "S",
+          "description": "Signal"
+        },
+        {
+          "name": "B",
+          "description": "Background"
+        },
+        {
+          "name": "S/B",
+          "description": "Signal over Background"
+        }
+      ]
+    }
+  ]
+}
